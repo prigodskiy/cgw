@@ -81,14 +81,14 @@ REGISTER_MODULE(Module)
 Скопируйте этот шаблон и адаптируйте:
 
 ```cpp
-// src/modules/[ModuleName]Module.cpp
+// src/modules/Module.cpp
 
-#include "[ModuleName]Module.h"
+#include "Module.h"
 #include <iostream>
 #include <cmath>
 
 // === КОНСТРУКТОР ===
-[ModuleName]Module::[ModuleName]Module()
+Module::Module()
 {
     // Инициализация переменных из оригинального файла
     // Пример:
@@ -98,7 +98,7 @@ REGISTER_MODULE(Module)
 }
 
 // === ИНИЦИАЛИЗАЦИЯ (вызывается при переключении на модуль) ===
-void [ModuleName]Module::init()
+void Module::init()
 {
     // Настройка OpenGL
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -126,7 +126,7 @@ void [ModuleName]Module::init()
 }
 
 // === ОБНОВЛЕНИЕ ЛОГИКИ (вызывается каждый кадр) ===
-void [ModuleName]Module::update()
+void Module::update()
 {
     // Перенесите код из оригинальной функции timer()
     // Пример:
@@ -135,7 +135,7 @@ void [ModuleName]Module::update()
 }
 
 // === ОТРИСОВКА (вызывается каждый кадр) ===
-void [ModuleName]Module::draw()
+void Module::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -152,7 +152,7 @@ void [ModuleName]Module::draw()
 }
 
 // === ОБРАБОТКА ОБЫЧНЫХ КЛАВИШ (a-z, 0-9, ESC, пробел) ===
-void [ModuleName]Module::handleKeyboard(unsigned char key)
+void Module::handleKeyboard(unsigned char key)
 {
     switch (key) {
         case 'r': reset(); break;
@@ -163,7 +163,7 @@ void [ModuleName]Module::handleKeyboard(unsigned char key)
 }
 
 // === ОБРАБОТКА СПЕЦИАЛЬНЫХ КЛАВИШ (стрелки, F1-F12, Page Up/Down) ===
-void [ModuleName]Module::handleSpecialKey(int key)
+void Module::handleSpecialKey(int key)
 {
     switch (key) {
         case GLUT_KEY_UP:    /* что-то */ break;
@@ -176,19 +176,19 @@ void [ModuleName]Module::handleSpecialKey(int key)
 }
 
 // === ОЧИСТКА (вызывается при переключении с модуля) ===
-void [ModuleName]Module::deinit()
+void Module::deinit()
 {
     std::cout << "=== Модуль '" << getName() << "' деактивирован ===" << std::endl;
 }
 
 // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
 
-void [ModuleName]Module::reset()
+void Module::reset()
 {
     // Сброс всех переменных к начальным значениям
 }
 
-void [ModuleName]Module::drawObject()
+void Module::drawObject()
 {
     // Перенесите код отрисовки из оригинальной функции display()
     // Пример для куба:
@@ -201,7 +201,7 @@ void [ModuleName]Module::drawObject()
     */
 }
 
-void [ModuleName]Module::showHelp()
+void Module::showHelp()
 {
     std::cout << "\n=== Управление: " << getName() << " ===" << std::endl;
     std::cout << "r - Сброс" << std::endl;
