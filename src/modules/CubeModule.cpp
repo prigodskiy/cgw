@@ -1,4 +1,4 @@
-#include "CubeModule.h"
+﻿#include "CubeModule.h"
 #include <iostream>
 
 CubeModule::CubeModule() {
@@ -21,13 +21,26 @@ void CubeModule::reset() {
     dirY = 0.005f;
 }
 
+// src/modules/CubeModule.cpp
 void CubeModule::init() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+    // === ВАЖНО: Сброс матрицы проекции ===
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    float aspect = 1280.0f / 720.0f;  // Или получите из окна
+    gluPerspective(45.0f, aspect, 0.1f, 100.0f);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    // =======================================
+    
     reset();
     showHelp();
+    
     std::cout << "=== Модуль '" << getName() << "' активирован ===" << std::endl;
 }
 
@@ -88,8 +101,14 @@ void CubeModule::drawCube() {
 void CubeModule::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    // Сброс матрицы вида каждый кадр
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    
+    // Настройка камеры
+    gluLookAt(0.0f, 0.0f, 5.0f,    // Позиция камеры
+              0.0f, 0.0f, 0.0f,    // Куда смотрит
+              0.0f, 1.0f, 0.0f);   // Верхний вектор
     
     glPushMatrix();
     glTranslatef(cubeX, cubeY, cubeZ);

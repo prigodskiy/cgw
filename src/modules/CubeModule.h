@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "../IModule.h"
 #include "../ModuleRegistry.h"
 #include <GL/freeglut.h>

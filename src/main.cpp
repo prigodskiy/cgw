@@ -1,14 +1,23 @@
-#include <GL/freeglut.h>
+﻿#include <GL/freeglut.h>
 #include <iostream>
 #include <vector>
 #include <memory>
 #include "ModuleRegistry.h"
 #include "IModule.h"
+#include <clocale>
 
 // Глобальные переменные
 std::vector<std::unique_ptr<IModule>> modules;
-int currentModuleIndex = 0;
+size_t currentModuleIndex = 0;
 bool isRunning = true;
+
+void clearConsole() {
+    #ifdef _WIN32
+        system("cls");           // Для Windows
+    #else
+        system("clear");         // Для Linux/Mac
+    #endif
+}
 
 // Колбэки
 void displayFunc() {
@@ -22,18 +31,20 @@ void keyboardFunc(unsigned char key, int x, int y) {
         return;
     }
     
-    // Переключение модулей стрелками
-    if (key == GLUT_KEY_LEFT || key == 'p') {
+    // Переключение модулей клавишами A и D
+    if (key == 'a' || key == 'A') {
         modules[currentModuleIndex]->deinit();
         currentModuleIndex = (currentModuleIndex - 1 + modules.size()) % modules.size();
+        clearConsole();
         modules[currentModuleIndex]->init();
         std::cout << ">>> Переключено на: " << modules[currentModuleIndex]->getName() << std::endl;
         return;
     }
     
-    if (key == GLUT_KEY_RIGHT || key == 'n') {
+    if (key == 'd' || key == 'D') {
         modules[currentModuleIndex]->deinit();
         currentModuleIndex = (currentModuleIndex + 1) % modules.size();
+        clearConsole();
         modules[currentModuleIndex]->init();
         std::cout << ">>> Переключено на: " << modules[currentModuleIndex]->getName() << std::endl;
         return;
@@ -42,24 +53,7 @@ void keyboardFunc(unsigned char key, int x, int y) {
     modules[currentModuleIndex]->handleKeyboard(key);
 }
 
-void specialKeysFunc(int key, int x, int y) {
-    // Стрелки влево/вправо для переключения модулей
-    if (key == GLUT_KEY_LEFT) {
-        modules[currentModuleIndex]->deinit();
-        currentModuleIndex = (currentModuleIndex - 1 + modules.size()) % modules.size();
-        modules[currentModuleIndex]->init();
-        std::cout << ">>> Переключено на: " << modules[currentModuleIndex]->getName() << std::endl;
-        return;
-    }
-    
-    if (key == GLUT_KEY_RIGHT) {
-        modules[currentModuleIndex]->deinit();
-        currentModuleIndex = (currentModuleIndex + 1) % modules.size();
-        modules[currentModuleIndex]->init();
-        std::cout << ">>> Переключено на: " << modules[currentModuleIndex]->getName() << std::endl;
-        return;
-    }
-    
+void specialKeysFunc(int key, int x, int y) {   
     modules[currentModuleIndex]->handleSpecialKey(key);
 }
 
@@ -112,7 +106,7 @@ int main(int argc, char** argv) {
     for (size_t i = 0; i < modules.size(); i++) {
         std::cout << "  " << i + 1 << ". " << modules[i]->getName() << std::endl;
     }
-    std::cout << "\nСтрелки ВЛЕВО/ВПРАВО - переключение модулей" << std::endl;
+    std::cout << "\nКлавиши A и D - переключение модулей" << std::endl;
     std::cout << "ESC - выход\n" << std::endl;
     
     glutMainLoop();
