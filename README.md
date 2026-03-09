@@ -20,15 +20,17 @@
 #### Шаг 1. Создайте два файла модуля
 
 Создайте в папке src/modules/ два файла:
+```cpp
 Module.h — заголовочный файл (класс, объявления)
 Module.cpp — файл реализации (код функций)
-
+```
 #### Шаг 2. Заполните заголовочный файл (.h)
 
 Скопируйте этот шаблон и адаптируйте под свой проект:
 
-```sh
+```cpp
 // src/modules/Module.h
+
 #pragma once
 #include "../IModule.h"
 #include "../ModuleRegistry.h"
@@ -78,8 +80,9 @@ REGISTER_MODULE(Module)
 
 Скопируйте этот шаблон и адаптируйте:
 
-```sh
+```cpp
 // src/modules/[ModuleName]Module.cpp
+
 #include "[ModuleName]Module.h"
 #include <iostream>
 #include <cmath>
@@ -206,4 +209,3 @@ void [ModuleName]Module::showHelp()
     std::cout << "=========================\n" << std::endl;
 }
 ```
-
