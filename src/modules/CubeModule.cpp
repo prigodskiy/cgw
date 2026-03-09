@@ -10,6 +10,27 @@ CubeModule::CubeModule() {
     colors[5][0] = 0.0f; colors[5][1] = 1.0f; colors[5][2] = 1.0f;
 }
 
+void CubeModule::setRandomColors(bool enable) {
+    randomColors = enable;
+    
+    if (randomColors) {
+        for (int i = 0; i < 6; i++) {
+            colors[i][0] = Random::value();
+            colors[i][1] = Random::value();
+            colors[i][2] = Random::value();
+        }
+        std::cout << "Случайные цвета включены!" << std::endl;
+    } else {
+        colors[0][0] = 1.0f; colors[0][1] = 0.0f; colors[0][2] = 0.0f;
+        colors[1][0] = 0.0f; colors[1][1] = 1.0f; colors[1][2] = 0.0f;
+        colors[2][0] = 0.0f; colors[2][1] = 0.0f; colors[2][2] = 1.0f;
+        colors[3][0] = 1.0f; colors[3][1] = 1.0f; colors[3][2] = 0.0f;
+        colors[4][0] = 1.0f; colors[4][1] = 0.0f; colors[4][2] = 1.0f;
+        colors[5][0] = 0.0f; colors[5][1] = 1.0f; colors[5][2] = 1.0f;
+        std::cout << "Стандартные цвета восстановлены!" << std::endl;
+    }
+}
+
 void CubeModule::reset() {
     angleX = angleY = angleZ = 0.0f;
     rotationSpeed = 2.0f;
@@ -21,22 +42,19 @@ void CubeModule::reset() {
     dirY = 0.005f;
 }
 
-// src/modules/CubeModule.cpp
 void CubeModule::init() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    // === ВАЖНО: Сброс матрицы проекции ===
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    float aspect = 1280.0f / 720.0f;  // Или получите из окна
+    float aspect = 1280.0f / 720.0f;
     gluPerspective(45.0f, aspect, 0.1f, 100.0f);
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    // =======================================
     
     reset();
     showHelp();
@@ -101,14 +119,12 @@ void CubeModule::drawCube() {
 void CubeModule::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    // Сброс матрицы вида каждый кадр
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    // Настройка камеры
-    gluLookAt(0.0f, 0.0f, 5.0f,    // Позиция камеры
-              0.0f, 0.0f, 0.0f,    // Куда смотрит
-              0.0f, 1.0f, 0.0f);   // Верхний вектор
+    gluLookAt(0.0f, 0.0f, 5.0f,
+              0.0f, 0.0f, 0.0f,
+              0.0f, 1.0f, 0.0f);
     
     glPushMatrix();
     glTranslatef(cubeX, cubeY, cubeZ);
@@ -132,6 +148,7 @@ void CubeModule::handleKeyboard(unsigned char key) {
         case 'w': moveSpeed += 0.01f; break;
         case 's': if (moveSpeed > 0.01f) moveSpeed -= 0.01f; break;
         case 'r': reset(); break;
+        case 'c': setRandomColors(!randomColors); break;
     }
 }
 
@@ -158,5 +175,6 @@ void CubeModule::showHelp() {
     std::cout << "Стрелки - перемещение" << std::endl;
     std::cout << "Page Up/Down - приближение/отдаление" << std::endl;
     std::cout << "r - Сброс" << std::endl;
+    std::cout << "c - Случайные цвета" << std::endl;
     std::cout << "=========================\n" << std::endl;
 }

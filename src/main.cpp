@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "utils/Random.h"
 #include "ModuleRegistry.h"
 #include "IModule.h"
 #include <clocale>
@@ -76,7 +77,10 @@ void reshapeFunc(int width, int height) {
 
 int main(int argc, char** argv) {
     setlocale(LC_ALL, "Russian");
+    system("chcp 65001 > nul");
     
+    Random::init();  // ← Инициализация генератора
+
     // Автоматически получаем ВСЕ зарегистрированные модули
     modules = ModuleRegistry::createAllModules();
     

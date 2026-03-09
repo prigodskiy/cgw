@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "../IModule.h"
 #include "../ModuleRegistry.h"
+#include "../utils/Random.h"
 #include <GL/freeglut.h>
 
 class CubeModule : public IModule
@@ -12,6 +13,7 @@ private:
     float cubeX, cubeY, cubeZ;
     float moveSpeed, dirX, dirY;
     GLfloat colors[6][3];
+    bool randomColors;
 
 public:
     CubeModule();
@@ -22,6 +24,7 @@ public:
     void handleKeyboard(unsigned char key) override;
     void handleSpecialKey(int key) override;
     void deinit() override;
+    void setRandomColors(bool enable);
     const char* getName() const override { return "Куб"; }
     
 private:
@@ -30,5 +33,4 @@ private:
     void reset();
 };
 
-// Автоматическая регистрация модуля
 REGISTER_MODULE(CubeModule)
