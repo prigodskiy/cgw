@@ -1,0 +1,14 @@
+{
+    "cmake.configureOnOpen": true,
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/src/**",
+        "${workspaceFolder}/src/modules/**",
+        "${workspaceFolder}/include/**"
+    ],
+    "C_Cpp.default.browse.path": [
+        "${workspaceFolder}/src/**",
+        "${workspaceFolder}/include/**"
+    ],
+    "C_Cpp.errorSquiggles": "enabledIfIncludesResolve"
+}
