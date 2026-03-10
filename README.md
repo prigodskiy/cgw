@@ -21,59 +21,49 @@
 
 Создайте в папке src/modules/ два файла:
 ```cpp
-Module.h — заголовочный файл (класс, объявления)
-Module.cpp — файл реализации (код функций)
+НазваниеМодуля.h — заголовочный файл (класс, объявления)
+НазваниеМодуля.cpp — файл реализации (код функций)
 ```
 #### Шаг 2. Заполните заголовочный файл (.h)
 
-Скопируйте этот шаблон и адаптируйте под свой проект:
+Скопируйте этот шаблон, измените название класса и перепишите свой код:
 
 ```cpp
-// src/modules/Module.h
-
+// src/modules/НазваниеМодуля.h
 #pragma once
 #include "../IModule.h"
 #include "../ModuleRegistry.h"
+#include "../utils/Random.h"
 #include <GL/freeglut.h>
 
-class Module : public IModule
+class НазваниеМодуля : public IModule
 {
 private:
-    // === ПЕРЕМЕННЫЕ ИЗ ОРИГИНАЛЬНОГО ФАЙЛА ===
-    // Перенесите все глобальные переменные сюда
-    // Пример:
-    // float angleX, angleY, angleZ;
-    // float rotationSpeed;
-    // bool isRunning;
-    
-    // === ЦВЕТА И НАСТРОЙКИ ===
-    GLfloat someColor[3];
+    // Ваши переменные (позиция, цвет, состояние и т.д.)
+    float someValue;
+    bool isRunning;
 
 public:
-    Module();  // Конструктор
-    
-    // === ОБЯЗАТЕЛЬНЫЕ МЕТОДЫ (наследуются от IModule) ===
+    // Конструктор (опционально)
+    НазваниеМодуля();
+
+    // Обязательные методы интерфейса
     void init() override;
     void update() override;
     void draw() override;
     void handleKeyboard(unsigned char key) override;
     void handleSpecialKey(int key) override;
     void deinit() override;
-    
-    // === НАЗВАНИЕ МОДУЛЯ (отображается в консоли) ===
-    const char* getName() const override { return "[Название модуля]"; }
-    
+    const char* getName() const override { return "Название модуля"; }
+
 private:
-    // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
-    // Перенесите свои функции сюда
-    // Пример:
-    // void drawObject();
-    // void reset();
-    // void showHelp();
+    // Ваши вспомогательные методы
+    void drawObject();
+    void reset();
 };
 
-// === АВТОМАТИЧЕСКАЯ РЕГИСТРАЦИЯ (ОБЯЗАТЕЛЬНО!) ===
-REGISTER_MODULE(Module)
+// Регистрация модуля
+REGISTER_MODULE(НазваниеМодуля)
 ```
 
 #### Шаг 3: Заполните файл реализации (.cpp)
@@ -81,131 +71,117 @@ REGISTER_MODULE(Module)
 Скопируйте этот шаблон и адаптируйте:
 
 ```cpp
-// src/modules/Module.cpp
-
-#include "Module.h"
+// src/modules/НазваниеМодуля.cpp
+#include "НазваниеМодуля.h"
 #include <iostream>
 #include <cmath>
 
-// === КОНСТРУКТОР ===
-Module::Module()
+НазваниеМодуля::НазваниеМодуля() : someValue(0.0f), isRunning(true)
 {
-    // Инициализация переменных из оригинального файла
-    // Пример:
-    // angleX = angleY = angleZ = 0.0f;
-    // rotationSpeed = 2.0f;
-    someColor[0] = 1.0f; someColor[1] = 0.0f; someColor[2] = 0.0f;
+    // Инициализация переменных
 }
 
-// === ИНИЦИАЛИЗАЦИЯ (вызывается при переключении на модуль) ===
-void Module::init()
+void НазваниеМодуля::init()
 {
     // Настройка OpenGL
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
     
-    // === ВАЖНО: Сброс матриц ===
+    // Сброс матриц
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // Для 3D:
     gluPerspective(45.0f, 1280.0f / 720.0f, 0.1f, 100.0f);
-    // Для 2D:
-    // gluOrtho2D(-2.0f, 2.0f, -2.0f, 2.0f);
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    // Включите/выключите нужные режимы
-    glEnable(GL_DEPTH_TEST);      // Для 3D
-    // glDisable(GL_DEPTH_TEST);  // Для 2D
-    
-    // Сброс переменных
     reset();
     showHelp();
     
     std::cout << "=== Модуль '" << getName() << "' активирован ===" << std::endl;
 }
 
-// === ОБНОВЛЕНИЕ ЛОГИКИ (вызывается каждый кадр) ===
-void Module::update()
+void НазваниеМодуля::update()
 {
-    // Перенесите код из оригинальной функции timer()
-    // Пример:
-    // angleX += rotationSpeed;
-    // if (angleX > 360.0f) angleX = 0.0f;
+    // Логика обновления (физика, анимация и т.д.)
+    if (isRunning)
+    {
+        someValue += 0.01f;
+    }
 }
 
-// === ОТРИСОВКА (вызывается каждый кадр) ===
-void Module::draw()
+void НазваниеМодуля::drawObject()
+{
+    // Отрисовка вашего объекта
+    // Пример: треугольник
+    glBegin(GL_TRIANGLES);
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glVertex2f(0.0f, 1.0f);
+        glColor3f(0.0f, 1.0f, 0.0f);
+        glVertex2f(-1.0f, -1.0f);
+        glColor3f(0.0f, 0.0f, 1.0f);
+        glVertex2f(1.0f, -1.0f);
+    glEnd();
+}
+
+void НазваниеМодуля::draw()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    // Для 3D добавьте камеру:
-    // gluLookAt(0.0f, 0.0f, 5.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-    
-    // Вызовите свою функцию отрисовки
     drawObject();
     
     glutSwapBuffers();
 }
 
-// === ОБРАБОТКА ОБЫЧНЫХ КЛАВИШ (a-z, 0-9, ESC, пробел) ===
-void Module::handleKeyboard(unsigned char key)
+void НазваниеМодуля::handleKeyboard(unsigned char key)
 {
-    switch (key) {
-        case 'r': reset(); break;
-        case '+': /* что-то */ break;
-        case '-': /* что-то */ break;
-        case 27: break;  // ESC обрабатывается в main.cpp
+    switch (key)
+    {
+        case ' ':  // Пробел
+            isRunning = !isRunning;
+            break;
+        case 'r':  // Сброс
+            reset();
+            break;
+        case 'c':  // Случайный цвет
+            // Random::color() можно использовать
+            break;
     }
 }
 
-// === ОБРАБОТКА СПЕЦИАЛЬНЫХ КЛАВИШ (стрелки, F1-F12, Page Up/Down) ===
-void Module::handleSpecialKey(int key)
+void НазваниеМодуля::handleSpecialKey(int key)
 {
-    switch (key) {
-        case GLUT_KEY_UP:    /* что-то */ break;
-        case GLUT_KEY_DOWN:  /* что-то */ break;
-        case GLUT_KEY_LEFT:  /* что-то */ break;
-        case GLUT_KEY_RIGHT: /* что-то */ break;
-        case GLUT_KEY_PAGE_UP:   /* что-то */ break;
-        case GLUT_KEY_PAGE_DOWN: /* что-то */ break;
+    switch (key)
+    {
+        case GLUT_KEY_UP:
+            // Обработка стрелки вверх
+            break;
+        case GLUT_KEY_DOWN:
+            // Обработка стрелки вниз
+            break;
     }
 }
 
-// === ОЧИСТКА (вызывается при переключении с модуля) ===
-void Module::deinit()
+void НазваниеМодуля::deinit()
 {
     std::cout << "=== Модуль '" << getName() << "' деактивирован ===" << std::endl;
 }
 
-// === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
-
-void Module::reset()
+void НазваниеМодуля::reset()
 {
-    // Сброс всех переменных к начальным значениям
+    someValue = 0.0f;
+    isRunning = true;
 }
 
-void Module::drawObject()
-{
-    // Перенесите код отрисовки из оригинальной функции display()
-    // Пример для куба:
-    /*
-    glBegin(GL_QUADS);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glVertex3f(-1.0f, -1.0f, 1.0f);
-    // ... остальные вершины
-    glEnd();
-    */
-}
-
-void Module::showHelp()
+void НазваниеМодуля::showHelp()
 {
     std::cout << "\n=== Управление: " << getName() << " ===" << std::endl;
+    std::cout << "Пробел - Старт/Пауза" << std::endl;
     std::cout << "r - Сброс" << std::endl;
-    std::cout << "ESC - Выход из программы" << std::endl;
+    std::cout << "c - Случайный цвет" << std::endl;
     std::cout << "=========================\n" << std::endl;
 }
 ```
